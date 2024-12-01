@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./Backend/resources:/app/resources  # Mount für Modelle und Bilder
+    ports:
+      - "9000:9000"
+

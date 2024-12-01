@@ -1,0 +1,84 @@
+# Node.js (Angular Frontend)
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.angular/cache/
+frontend/.editorconfig
+
+# Temporäre Dateien
+*.tmp
+*.temp
+frontend/*.tmp
+frontend/*.temp
+backend/*.tmp
+backend/*.temp
+
+# Betriebssystemspezifische Dateien
+.DS_Store  # macOS
+Thumbs.db  # Windows
+frontend/.DS_Store
+frontend/Thumbs.db
+backend/.DS_Store
+backend/Thumbs.db
+
+# Umgebungsvariablen
+.env
+frontend/.env
+backend/.env
+
+# Python (Backend)
+backend/__pycache__/
+backend/*.py[cod]
+backend/*.so
+backend/*.egg
+backend/*.egg-info/
+backend/.eggs/
+
+# Build-Ausgaben
+build/
+dist/
+pip-wheel-metadata/
+frontend/build/
+frontend/dist/
+backend/build/
+backend/dist/
+backend/pip-wheel-metadata/
+
+# Test- und Coverage-Dateien
+.coverage
+coverage/
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+backend/.coverage
+backend/coverage/
+backend/htmlcov/
+backend/.tox/
+backend/.nox/
+backend/.pytest_cache/
+
+# IDE- und Editor-spezifische Dateien
+.vscode/
+.idea/
+frontend/.vscode/
+frontend/.idea/
+backend/.vscode/
+backend/.idea/
+frontend/*.sublime-workspace
+frontend/*.sublime-project
+backend/*.sublime-workspace
+backend/*.sublime-project
+
+# Docker
+*.stackdump
+docker-compose.override.yml
+
+# Sonstige
+*.swp
+*~
+*.bak
+*.orig

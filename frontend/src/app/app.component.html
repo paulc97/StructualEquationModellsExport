@@ -1,0 +1,195 @@
+<div class="bg-gray-900 min-h-screen overflow-y-scroll">
+  <div class="relative isolate overflow-hidden pt-14">
+    <!-- Hintergrundgestaltung (unverändert) -->
+    <div
+      class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 h-full"
+      aria-hidden="true"
+    >
+      <div
+        class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+        style="
+          clip-path: polygon(
+            74.1% 44.1%,
+            100% 61.6%,
+            97.5% 26.9%,
+            85.5% 0.1%,
+            80.7% 2%,
+            72.5% 32.5%,
+            60.2% 62.4%,
+            52.4% 68.1%,
+            47.5% 58.3%,
+            45.2% 34.5%,
+            27.5% 76.7%,
+            0.1% 64.9%,
+            17.9% 100%,
+            27.6% 76.8%,
+            76.1% 97.7%,
+            74.1% 44.1%
+          );
+        "
+      ></div>
+    </div>
+    <div class="mx-auto max-w-7xl pt-24 px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+          Strukturgleichungsmodell Export
+        </h1>
+
+        <p *ngIf="!responseData" class="mt-6 text-lg leading-8 text-gray-300">
+          Laden Sie bitte das PDF hoch, aus dem Sie die
+          Strukturgleichungsmodelle exportieren möchten.
+        </p>
+        <p *ngIf="responseData" class="mt-6 text-lg leading-8 text-gray-300">
+          Klicken Sie auf die Kategorien, um die Bilder zu sehen und auf die
+          Bilder um sie herunterzuladen.
+        </p>
+        <div class="mt-10 flex items-center justify-center gap-x-6">
+          <a
+            *ngIf="!selectedFile && !responseData"
+            class="cursor-pointer rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+            (click)="onClickUpload()"
+            >PDF Hochladen</a
+          >
+          <input
+            hidden
+            type="file"
+            id="upload"
+            (change)="onFileSelected($event)"
+            accept="application/pdf"
+          />
+        </div>
+        <div *ngIf="selectedFile && !responseData" class="text-center mt-10">
+          <iframe
+            [src]="fileUrl"
+            class="w-full h-64 mb-4"
+            frameborder="0"
+          ></iframe>
+          <button
+            class="cursor-pointer rounded-md bg-green-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-400"
+            (click)="uploadFile()"
+          >
+            Exportieren
+          </button>
+        </div>
+
+        <div *ngIf="responseData" class="mt-10">
+          <!-- Positive Kategorie -->
+          <div class="mb-6">
+            <div
+              class="p-4 rounded-md flex justify-between items-center"
+              [ngClass]="{
+                'bg-gray-800 cursor-pointer': positiveResponses.length > 0,
+                'bg-gray-700 opacity-50 cursor-not-allowed':
+                  positiveResponses.length === 0
+              }"
+              (click)="positiveResponses.length > 0 && togglePositive()"
+            >
+              <h3 class="text-white text-lg font-semibold">
+                Vermutlich Positive ({{ positiveResponses.length }})
+              </h3>
+              <svg
+                *ngIf="positiveResponses.length > 0"
+                [ngClass]="{
+                  'transform rotate-180': isPositiveExpanded,
+                  'transform rotate-0': !isPositiveExpanded
+                }"
+                class="w-5 h-5 text-white transition-transform duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+            <div
+              *ngIf="isPositiveExpanded && positiveResponses.length > 0"
+              class="mt-2"
+            >
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div *ngFor="let item of positiveResponses" class="text-center">
+                  <div class="w-full h-48 overflow-hidden">
+                    <img
+                      [src]="sanitizeImage(item.image)"
+                      alt="{{ item.name }}"
+                      class="cursor-pointer w-full h-full object-cover"
+                      (click)="downloadImage(item)"
+                    />
+                  </div>
+                  <p class="text-white mt-2">
+                    Wahrscheinlichkeit:
+                    {{ roundToFourDecimals(item.probability_positive) }}%
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="p-4 rounded-md flex justify-between items-center"
+              [ngClass]="{
+                'bg-gray-800 cursor-pointer': negativeResponses.length > 0,
+                'bg-gray-700 opacity-50 cursor-not-allowed':
+                  negativeResponses.length === 0
+              }"
+              (click)="negativeResponses.length > 0 && toggleNegative()"
+            >
+              <h3 class="text-white text-lg font-semibold">
+                Vermutlich Negative ({{ negativeResponses.length }})
+              </h3>
+              <svg
+                *ngIf="negativeResponses.length > 0"
+                [ngClass]="{
+                  'transform rotate-180': isNegativeExpanded,
+                  'transform rotate-0': !isNegativeExpanded
+                }"
+                class="w-5 h-5 text-white transition-transform duration-200"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+            <div
+              *ngIf="isNegativeExpanded && negativeResponses.length > 0"
+              class="mt-2"
+            >
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div *ngFor="let item of negativeResponses" class="text-center">
+                  <div class="w-full h-48 overflow-hidden">
+                    <img
+                      [src]="sanitizeImage(item.image)"
+                      alt="{{ item.name }}"
+                      class="cursor-pointer w-full h-full object-cover"
+                      (click)="downloadImage(item)"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Reset-Button -->
+          <div class="py-10 text-center">
+            <button
+              class="cursor-pointer rounded-md bg-red-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400"
+              (click)="reset()"
+            >
+              Nächstes Dokument
+            </button>
+          </div>
+        </div>
+        <!-- Ende der kategorisierten Antworten -->
+      </div>
+    </div>
+  </div>
+</div>

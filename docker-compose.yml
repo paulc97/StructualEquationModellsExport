@@ -1,21 +1,22 @@
-version: '3'
+version: "3.8"
 
 services:
   frontend:
-    build:
-      context: ./Frontend
-      dockerfile: Dockerfile
+    build: ./frontend
     ports:
       - "80:80"
     depends_on:
       - backend
+    networks:
+      - app-network
 
   backend:
-    build:
-      context: ./Backend
-      dockerfile: Dockerfile
-    volumes:
-      - ./Backend/resources:/app/resources  # Mount für Modelle und Bilder
+    build: ./backend
     ports:
       - "9000:9000"
+    networks:
+      - app-network
 
+networks:
+  app-network:
+    driver: bridge

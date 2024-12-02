@@ -50,7 +50,7 @@ cd StructualEquationModellsExport
 Starten Sie die Anwendung mit Docker Compose:
 
 ```bash
-docker-compose up -d --build
+docker compose up -d
 ```
 
 Dieser Befehl erstellt die notwendigen Docker-Images und startet die Dienste im Hintergrund.
